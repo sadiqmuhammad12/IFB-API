@@ -5,8 +5,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-require __DIR__.'/classes/Database.php';
-require __DIR__.'/classes/JwtHandler.php';
+require __DIR__.'../config/database.php';
 
 function msg($success,$status,$message,$extra = []){
     return array_merge([
@@ -17,7 +16,7 @@ function msg($success,$status,$message,$extra = []){
 }
 
 $db_connection = new Database();
-$conn = $db_connection->dbConnection();
+$conn = $db_connection->getConnection();
 
 $data = json_decode(file_get_contents("php://input"));
 $returnData = [];
@@ -64,19 +63,11 @@ else:
                 $check_password = password_verify($password, $row['password']);
 
                 // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
-                // IF PASSWORD IS CORRECT THEN SEND THE LOGIN TOKEN
+                // IF PASSWORD IS CORRECT THEN SEND THE LOGIN 
                 if($check_password):
-
-                    $jwt = new JwtHandler();
-                    $token = $jwt->jwtEncodeData(
-                        'http://localhost/php_auth_api/',
-                        array("user_id"=> $row['id'])
-                    );
-                    
                     $returnData = [
                         'success' => 1,
                         'message' => 'You have successfully logged in.',
-                        'token' => $token
                     ];
 
                 // IF INVALID PASSWORD
