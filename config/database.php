@@ -2,15 +2,16 @@
 class Database{
   
     //specify your own database credentials
-    private $host = "db";
-    private $db_name = "idfb";
-    private $username = "idfb_user";
-    private $password = "kJfVqML59kzc8nMS";
-    // private $host = "localhost";
-    // private $db_name = "fake_beggar";
-    // private $username = "root";
-    // private $password = "";
+    // private $host = "db";
+    // private $db_name = "idfb";
+    // private $username = "idfb_user";
+    // private $password = "kJfVqML59kzc8nMS";
 
+ 
+    private $host = "localhost";
+    private $db_name = "fake_beggar";
+    private $username = "root";
+    private $password = "";
     // this is for testing commit
 
     public $conn;
