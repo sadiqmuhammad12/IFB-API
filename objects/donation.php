@@ -115,6 +115,35 @@ function create_donation(){
       
 }
 
+// Fetch single element
+function read_single_donation(){  
+    // query to read single record
+    $query = "SELECT * FROM  " . $this->table_name . " 
+            WHERE beggar_cnic = ?
+            LIMIT 0,1";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare( $query );
+  
+    // bind beggar_cnic of donation to be updated
+    $stmt->bindParam(1, $this->beggar_cnic);
+  
+    // execute query
+    $stmt->execute();
+  
+    // get retrieved row
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    // set values to object properties
+    $this->id = $row['id'];
+    $this->doner_id = $row['doner_id'];
+    $this->amount = $row['amount'];
+    $this->doner_name = $row['doner_name'];
+    $this->date_time = $row['date_time'];
+}
+
+
+
 // create doner
 function create_doner(){
   
@@ -242,6 +271,16 @@ function update_doner(){
     return false;
 }
 
+// read donation
+function read_donation(){  
+    $query = " SELECT * FROM donation";
+    
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+    // execute query
+    $stmt->execute();
+    return $stmt;
+}
 
 
 // delete the donation
@@ -629,14 +668,14 @@ function delete_volunteer(){
 function read_single_volunteer(){  
     // query to read single record
     $query = "SELECT * FROM  " . $this->table_name_volunteer . " 
-            WHERE id = ?
+            WHERE cnic = ?
             LIMIT 0,1";
   
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
   
-    // bind id of product to be updated
-    $stmt->bindParam(1, $this->id);
+    // bind cnic of product to be updated
+    $stmt->bindParam(1, $this->cnic);
   
     // execute query
     $stmt->execute();
@@ -646,7 +685,7 @@ function read_single_volunteer(){
   
     // set values to object properties
     $this->full_name = $row['full_name'];
-    $this->cnic = $row['cnic'];
+    $this->id = $row['id'];
     $this->gender = $row['gender'];
     $this->address = $row['address'];
 
@@ -671,11 +710,11 @@ function update_volunteer(){
                 " . $this->table_name_volunteer . "
             SET
                 full_name = :full_name,
-                cnic = :cnic,
+
                 gender = :gender,
                 address = :address
             WHERE
-                id = :id";
+                cnic = :cnic";
   
     // prepare query statement
     $stmt = $this->conn->prepare($query);
@@ -684,14 +723,14 @@ function update_volunteer(){
     $this->cnic=htmlspecialchars(strip_tags($this->cnic));
     $this->gender=htmlspecialchars(strip_tags($this->gender));
     $this->address=htmlspecialchars(strip_tags($this->address));
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    // $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind values
     $stmt->bindParam(":full_name", $this->full_name);
     $stmt->bindParam(":cnic", $this->cnic);
     $stmt->bindParam(":gender", $this->gender);
     $stmt->bindParam(":address", $this->address);
-    $stmt->bindParam(":id", $this->id);
+    // $stmt->bindParam(":id", $this->id);
   
     // execute the query
     if($stmt->execute()){
