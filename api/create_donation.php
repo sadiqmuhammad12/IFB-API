@@ -25,7 +25,12 @@ if(
     !empty($data->doner_id) &&
     !empty($data->amount) &&
     !empty($data->doner_name) &&
-    !empty($data->date_time) 
+    !empty($data->date_time) &&
+    !empty($data->phone_no)  &&
+    !empty($data->gender) &&
+    !empty($data->address) &&
+    !empty($data->description) &&
+    !empty($data->img) 
 ){
   
     // set donation property values
@@ -35,6 +40,11 @@ if(
     $donation->doner_name = $data->doner_name;
     // $donation->date_time = date('Y-m-d H:i:s');
     $donation->date_time = $data->date_time;
+    $donation->phone_no = $data->phone_no;
+    $donation->gender = $data->gender;
+    $donation->address = $data->address;
+    $donation->description = $data->description;
+    $donation->img = $data->img;
 
     // create the donation
     if($donation->create_donation()){
