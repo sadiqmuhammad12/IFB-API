@@ -6,7 +6,8 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // require __DIR__ . '/config/Database.php';
-require __DIR__.'../config/database.php';
+
+include_once './config/database.php';
 $db_connection = new Database();
 $conn = $db_connection->getConnection();
 
