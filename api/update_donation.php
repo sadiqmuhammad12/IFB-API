@@ -25,8 +25,8 @@ $donation->id = $data->id;
   
 // set donation property values
 $donation->beggar_cnic = $data->beggar_cnic;
-$donation->doner_id = $data->doner_id;
 $donation->amount = $data->amount;
+$donation->beggar_full_name=$beggar_full_name;
 $donation->doner_name = $data->doner_name;
 $donation->date_time = $data->date_time;
 // update the donation

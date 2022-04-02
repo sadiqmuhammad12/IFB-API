@@ -22,10 +22,10 @@ $data = json_decode(file_get_contents("php://input"));
 // make sure data is not empty
 if(
     !empty($data->beggar_cnic) &&
-    !empty($data->doner_id) &&
     !empty($data->amount) &&
     !empty($data->doner_name) &&
     !empty($data->date_time) &&
+    !empty($data->beggar_full_name)&&
     !empty($data->phone_no)  &&
     !empty($data->gender) &&
     !empty($data->address) &&
@@ -35,7 +35,6 @@ if(
   
     // set donation property values
     $donation->beggar_cnic = $data->beggar_cnic;
-    $donation->doner_id = $data->doner_id;
     $donation->amount = $data->amount;
     $donation->doner_name = $data->doner_name;
     // $donation->date_time = date('Y-m-d H:i:s');
@@ -43,6 +42,7 @@ if(
     $donation->phone_no = $data->phone_no;
     $donation->gender = $data->gender;
     $donation->address = $data->address;
+    $donation->beggar_full_name=$beggar_full_name;
     $donation->description = $data->description;
     $donation->img = $data->img;
 

@@ -30,7 +30,7 @@ class Donation{
     public $passwords;
     public $profile_img;
     public $addressess;
-
+    public $beggar_full_name;
     // Properties of staff_table
     //public $id;
     public $staff_name;
@@ -87,24 +87,36 @@ function create_donation(){
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                beggar_cnic=:beggar_cnic, doner_id=:doner_id, amount=:amount, doner_name=:doner_name, date_time=:date_time";
+                beggar_cnic=:beggar_cnic,amount=:amount, doner_name=:doner_name,beggar_full_name=:beggar_full_name,
+                date_time=:date_time,phone_no=:phone_no,gender=:gender,address=:address,description=:description,
+                img=:img";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
     $this->beggar_cnic=htmlspecialchars(strip_tags($this->beggar_cnic));
-    $this->doner_id=htmlspecialchars(strip_tags($this->doner_id));
     $this->amount=htmlspecialchars(strip_tags($this->amount));
     $this->doner_name=htmlspecialchars(strip_tags($this->doner_name));
     $this->date_time=htmlspecialchars(strip_tags($this->date_time));
+    $this->phone_no=htmlspecialchars(strip_tags($this->phone_no));
+    $this->gender=htmlspecialchars(strip_tags($this->gender));
+    $this->address=htmlspecialchars(strip_tags($this->address));
+    $this->description=htmlspecialchars(strip_tags($this->description));
+    $this->beggar_full_name=htmlspecialchars(strip_tags($this->beggar_full_name));
+    $this->img=htmlspecialchars(strip_tags($this->img));
   
     // bind values
     $stmt->bindParam(":beggar_cnic", $this->beggar_cnic);
-    $stmt->bindParam(":doner_id", $this->doner_id);
     $stmt->bindParam(":amount", $this->amount);
     $stmt->bindParam(":doner_name", $this->doner_name);
     $stmt->bindParam(":date_time", $this->date_time);
+    $stmt->bindParam(":phone_no", $this->phone_no);
+    $stmt->bindParam(":gender", $this->gender);
+    $stmt->bindParam(":img", $this->img);
+    $stmt->bindParam(":address", $this->address);
+    $stmt->bindParam(":description", $this->description);
+    $stmt->bindParam(":beggar_full_name", $this->beggar_full_name);
   
     // execute query
     if($stmt->execute()){
@@ -136,10 +148,15 @@ function read_single_donation(){
   
     // set values to object properties
     $this->id = $row['id'];
-    $this->doner_id = $row['doner_id'];
     $this->amount = $row['amount'];
     $this->doner_name = $row['doner_name'];
     $this->date_time = $row['date_time'];
+    $this->phone_no = $row['phone_no'];
+    $this->gender = $row['gender'];
+    $this->address = $row['address'];
+    $this->description = $row['description'];
+    $this->beggar_full_name = $row['beggar_full_name'];
+    $this->img = $row['img'];
 }
 
 
@@ -191,10 +208,15 @@ function update_donation(){
                 " . $this->table_name . "
             SET
                 beggar_cnic = :beggar_cnic,
-                doner_id = :doner_id,
                 amount = :amount,
                 doner_name = :doner_name,
-                date_time = :date_time
+                date_time = :date_time,
+                phone_no = :phone_no,
+                gender = :gender,
+                img = :img,
+                address = :address,
+                beggar_full_name = :beggar_full_name,
+                description = :description,
             WHERE
                 id = :id";
   
@@ -202,18 +224,28 @@ function update_donation(){
     $stmt = $this->conn->prepare($query);
   
     $this->beggar_cnic=htmlspecialchars(strip_tags($this->beggar_cnic));
-    $this->doner_id=htmlspecialchars(strip_tags($this->doner_id));
     $this->amount=htmlspecialchars(strip_tags($this->amount));
     $this->doner_name=htmlspecialchars(strip_tags($this->doner_name));
     $this->date_time=htmlspecialchars(strip_tags($this->date_time));
+    $this->phone_no=htmlspecialchars(strip_tags($this->phone_no));
+    $this->gender=htmlspecialchars(strip_tags($this->gender));
+    $this->address=htmlspecialchars(strip_tags($this->address));
+    $this->description=htmlspecialchars(strip_tags($this->description));
+    $this->img=htmlspecialchars(strip_tags($this->img));
+    $this->beggar_full_name=htmlspecialchars(strip_tags($this->beggar_full_name));
     $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind values
     $stmt->bindParam(":beggar_cnic", $this->beggar_cnic);
-    $stmt->bindParam(":doner_id", $this->doner_id);
     $stmt->bindParam(":amount", $this->amount);
     $stmt->bindParam(":doner_name", $this->doner_name);
     $stmt->bindParam(":date_time", $this->date_time);
+    $stmt->bindParam(":phone_no",$this->phone_no);
+    $stmt->bindParam(":gender", $this->gender);
+    $stmt->bindParam(":address", $this->address);
+    $stmt->bindParam(":description", $this->description);
+    $stmt->bindParam(":img", $this->img);
+    $stmt->bindParam(":beggar_full_name", $this->beggar_full_name);
     $stmt->bindParam(":id", $this->id);
   
     // execute the query
@@ -349,18 +381,18 @@ function create_staff(){
     $query = "INSERT INTO
                 " . $this->table_name_staff . "
             SET
-                staff_name=:staff_name, email=:email,passwords=:passwords";
+                full_name=:full_name, email=:email,passwords=:passwords";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->staff_name=htmlspecialchars(strip_tags($this->staff_name));
+    $this->full_name=htmlspecialchars(strip_tags($this->full_name));
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->passwords=htmlspecialchars(strip_tags($this->passwords));
   
     // bind values
-    $stmt->bindParam(":staff_name", $this->staff_name);
+    $stmt->bindParam(":full_name", $this->full_name);
     $stmt->bindParam(":email", $this->email);
     $stmt->bindParam(":passwords", $this->passwords);
   
@@ -433,14 +465,14 @@ function delete_staff(){
 function read_single_staff(){  
     // query to read single record
     $query = "SELECT * FROM  " . $this->table_name_staff . " 
-            WHERE id = ?
+            WHERE full_name = ?
             LIMIT 0,1";
   
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
   
-    // bind id of product to be updated
-    $stmt->bindParam(1, $this->id);
+    // bind full_name of product to be updated
+    $stmt->bindParam(1, $this->full_name);
   
     // execute query
     $stmt->execute();
@@ -449,7 +481,7 @@ function read_single_staff(){
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
   
     // set values to object properties
-    $this->staff_name = $row['staff_name'];
+    $this->id = $row['id'];
     $this->email = $row['email'];
     $this->passwords = $row['passwords'];
 }

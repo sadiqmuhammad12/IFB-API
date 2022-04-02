@@ -38,8 +38,8 @@ if($num>0){
         $donation_item=array(
             "id" => $id,
             "beggar_cnic" =>$beggar_cnic,
+            "beggar_full_name" =>$beggar_full_name,
             "doner_name" => $doner_name,
-            "doner_id" =>$doner_id,
             "amount" => $amount,
             "date_time" => $date_time
         );

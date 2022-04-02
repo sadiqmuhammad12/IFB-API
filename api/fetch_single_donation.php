@@ -27,9 +27,9 @@ if($donation->doner_name!=null){
     // create array
     $donation_arr = array(
         "id" =>  $donation->id,
+        "beggar_full_name" => $donation->beggar_full_name,
         "doner_name" => $donation->doner_name,
         "beggar_cnic" => $donation->beggar_cnic,
-        "doner_id" => $donation->doner_id,
         "amount" => $donation->amount,
         "date_time" => $donation->date_time
     );
