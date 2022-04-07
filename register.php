@@ -6,8 +6,9 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // require __DIR__ . '/config/Database.php';
-
+// require __DIR__.'/config/database.php';
 include_once './config/database.php';
+// include_once './config/database.php';
 $db_connection = new Database();
 $conn = $db_connection->getConnection();
 
@@ -29,21 +30,21 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") :
     $returnData = msg(0, 404, 'Page Not Found!');
 
 elseif (
-    !isset($data->name)
+    !isset($data->username)
     || !isset($data->email)
     || !isset($data->password)
-    || empty(trim($data->name))
+    || empty(trim($data->username))
     || empty(trim($data->email))
     || empty(trim($data->password))
 ) :
 
-    $fields = ['fields' => ['name', 'email', 'password']];
+    $fields = ['fields' => ['username', 'email', 'password']];
     $returnData = msg(0, 422, 'Please Fill in all Required Fields!', $fields);
 
 // IF THERE ARE NO EMPTY FIELDS THEN-
 else :
 
-    $name = trim($data->name);
+    $username = trim($data->username);
     $email = trim($data->email);
     $password = trim($data->password);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) :
@@ -52,7 +53,7 @@ else :
     elseif (strlen($password) < 8) :
         $returnData = msg(0, 422, 'Your password must be at least 8 characters long!');
 
-    elseif (strlen($name) < 3) :
+    elseif (strlen($username) < 3) :
         $returnData = msg(0, 422, 'Your name must be at least 3 characters long!');
 
     else :
@@ -67,12 +68,11 @@ else :
                 $returnData = msg(0, 422, 'This E-mail already in use!');
 
             else :
-                $insert_query = "INSERT INTO `users`(`name`,`email`,`password`) VALUES(:name,:email,:password)";
-
+                $insert_query = "INSERT INTO `users`(`username`,`email`,`password`) VALUES(:username,:email,:password)";
                 $insert_stmt = $conn->prepare($insert_query);
 
                 // DATA BINDING
-                $insert_stmt->bindValue(':name', htmlspecialchars(strip_tags($name)), PDO::PARAM_STR);
+                $insert_stmt->bindValue(':username', htmlspecialchars(strip_tags($username)), PDO::PARAM_STR);
                 $insert_stmt->bindValue(':email', $email, PDO::PARAM_STR);
                 $insert_stmt->bindValue(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
 

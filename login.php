@@ -5,8 +5,9 @@ header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+// require __DIR__.'/config/database.php';
 include_once './config/database.php';
-
+include_once './config/JwtHandler.php';
 function msg($success,$status,$message,$extra = []){
     return array_merge([
         'success' => $success,
@@ -65,9 +66,15 @@ else:
                 // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
                 // IF PASSWORD IS CORRECT THEN SEND THE LOGIN 
                 if($check_password):
+                    $jwt = new JwtHandler();
+                    $token = $jwt->jwtEncodeData(
+                        'http://localhost/identifyfakebeggar/',
+                        array("user_id"=> $row['id'])
+                    );
                     $returnData = [
                         'success' => 1,
                         'message' => 'You have successfully logged in.',
+                        'token' => $token
                     ];
 
                 // IF INVALID PASSWORD

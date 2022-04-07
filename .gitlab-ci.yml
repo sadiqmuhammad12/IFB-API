@@ -1,0 +1,12 @@
+---
+stages:
+  - deploy
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - idfb
+  script:
+    - rsync -av  --delete --exclude-from=$CI_PROJECT_DIR/.git-scripts/rsync-excludes.txt ./ /var/www/html/api/
+  only:
+    - main

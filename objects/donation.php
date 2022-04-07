@@ -8,6 +8,12 @@ class Donation{
     private $table_name_staff = "staff";
     private $table_name_beggar = "beggar";
     private $table_name_volunteer = "volunteer";
+    private $table_name_contact_us = "contact_us";
+    
+  
+    // object properties
+    public $city;
+    public $comments;
     
     // Properties of beggar table
     public $full_name;
@@ -19,7 +25,7 @@ class Donation{
     public $description;
     public $donation_amount;
     public $img;
-  
+     
     // object properties
     public $id;
     public $beggar_cnic;
@@ -82,15 +88,31 @@ function read(){
 
 // create donation
 function create_donation(){
-  
+     
     // query to insert record
     $query = "INSERT INTO
                 " . $this->table_name . "
+                
             SET
-                beggar_cnic=:beggar_cnic,amount=:amount, doner_name=:doner_name,beggar_full_name=:beggar_full_name,
-                date_time=:date_time,phone_no=:phone_no,gender=:gender,address=:address,description=:description,
-                img=:img";
-  
+            
+                beggar_cnic=:beggar_cnic,amount=:amount, doner_name=:doner_name,
+                phone_no=:phone_no,gender=:gender,description=:description,
+                img=:img,beggar_full_name=:beggar_full_name,address=:address,doner_id=:doner_id
+                ";
+
+
+    // for testing
+        // $query = "INSERT INTO donation(beggar_cnic,amount,doner_name,phone_no,gender,description,img,
+        //          beggar_full_name,doner_id)
+        //          values('7854783','2333','Naeem','48488','Male','edsxz','imag2.jpeg','kalim',
+        //         (SELECT id FROM users WHERE username ='javid'))";
+
+        // $query = "INSERT INTO `donation` (beggar_cnic,amount,doner_name,phone_no,gender,description,img,
+        //          beggar_full_name,address,doner_id)
+        //          values(?,?,?,?,?,?,?,?,?,
+        //         (SELECT id FROM users WHERE username ='$username'))";
+    
+
     // prepare query
     $stmt = $this->conn->prepare($query);
   
@@ -98,25 +120,27 @@ function create_donation(){
     $this->beggar_cnic=htmlspecialchars(strip_tags($this->beggar_cnic));
     $this->amount=htmlspecialchars(strip_tags($this->amount));
     $this->doner_name=htmlspecialchars(strip_tags($this->doner_name));
-    $this->date_time=htmlspecialchars(strip_tags($this->date_time));
     $this->phone_no=htmlspecialchars(strip_tags($this->phone_no));
+    
     $this->gender=htmlspecialchars(strip_tags($this->gender));
     $this->address=htmlspecialchars(strip_tags($this->address));
     $this->description=htmlspecialchars(strip_tags($this->description));
-    $this->beggar_full_name=htmlspecialchars(strip_tags($this->beggar_full_name));
+    
     $this->img=htmlspecialchars(strip_tags($this->img));
+    $this->beggar_full_name=htmlspecialchars(strip_tags($this->beggar_full_name));
+    $this->doner_id=htmlspecialchars(strip_tags($this->doner_id));
   
     // bind values
     $stmt->bindParam(":beggar_cnic", $this->beggar_cnic);
     $stmt->bindParam(":amount", $this->amount);
     $stmt->bindParam(":doner_name", $this->doner_name);
-    $stmt->bindParam(":date_time", $this->date_time);
     $stmt->bindParam(":phone_no", $this->phone_no);
     $stmt->bindParam(":gender", $this->gender);
     $stmt->bindParam(":img", $this->img);
     $stmt->bindParam(":address", $this->address);
     $stmt->bindParam(":description", $this->description);
     $stmt->bindParam(":beggar_full_name", $this->beggar_full_name);
+    $stmt->bindParam(":doner_id", $this->doner_id);
   
     // execute query
     if($stmt->execute()){
@@ -150,7 +174,6 @@ function read_single_donation(){
     $this->id = $row['id'];
     $this->amount = $row['amount'];
     $this->doner_name = $row['doner_name'];
-    $this->date_time = $row['date_time'];
     $this->phone_no = $row['phone_no'];
     $this->gender = $row['gender'];
     $this->address = $row['address'];
@@ -210,7 +233,6 @@ function update_donation(){
                 beggar_cnic = :beggar_cnic,
                 amount = :amount,
                 doner_name = :doner_name,
-                date_time = :date_time,
                 phone_no = :phone_no,
                 gender = :gender,
                 img = :img,
@@ -226,7 +248,6 @@ function update_donation(){
     $this->beggar_cnic=htmlspecialchars(strip_tags($this->beggar_cnic));
     $this->amount=htmlspecialchars(strip_tags($this->amount));
     $this->doner_name=htmlspecialchars(strip_tags($this->doner_name));
-    $this->date_time=htmlspecialchars(strip_tags($this->date_time));
     $this->phone_no=htmlspecialchars(strip_tags($this->phone_no));
     $this->gender=htmlspecialchars(strip_tags($this->gender));
     $this->address=htmlspecialchars(strip_tags($this->address));
@@ -239,7 +260,6 @@ function update_donation(){
     $stmt->bindParam(":beggar_cnic", $this->beggar_cnic);
     $stmt->bindParam(":amount", $this->amount);
     $stmt->bindParam(":doner_name", $this->doner_name);
-    $stmt->bindParam(":date_time", $this->date_time);
     $stmt->bindParam(":phone_no",$this->phone_no);
     $stmt->bindParam(":gender", $this->gender);
     $stmt->bindParam(":address", $this->address);
@@ -770,6 +790,41 @@ function update_volunteer(){
     }
   
     return false;
+}
+
+
+// create contact
+function create_contact(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                " . $this->table_name_contact_us . "
+            SET
+                full_name=:full_name, email=:email,city=:city,address=:address, comments=:comments";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->full_name=htmlspecialchars(strip_tags($this->full_name));
+    $this->email=htmlspecialchars(strip_tags($this->email));
+    $this->city=htmlspecialchars(strip_tags($this->city));
+    $this->address=htmlspecialchars(strip_tags($this->address));
+    $this->comments=htmlspecialchars(strip_tags($this->comments));
+  
+    // bind values
+    $stmt->bindParam(":full_name", $this->full_name);
+    $stmt->bindParam(":email", $this->email);
+    $stmt->bindParam(":city", $this->city);
+    $stmt->bindParam(":address", $this->address);
+    $stmt->bindParam(":comments", $this->comments);
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+    return false;   
 }
 
 }

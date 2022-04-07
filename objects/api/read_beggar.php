@@ -7,24 +7,24 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../config/database.php';
 include_once '../objects/donation.php';
   
-// instantiate database and product object
+// instantiate database and donation object
 $database = new Database();
 $db = $database->getConnection();
   
 // initialize object
-$donation = new Donation($db);
+$staff = new Donation($db);
   
 
-// query donation
-$stmt = $donation->read_donation();
+// query beggar
+$stmt = $staff->read_beggar();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
 if($num>0){
   
-    // donation array
-    $donations_arr=array();
-    $donations_arr["records"]=array();
+    // beggar array
+    $beggars_arr=array();
+    $beggars_arr["records"]=array();
   
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -35,22 +35,24 @@ if($num>0){
         // just $name only
         extract($row);
   
-        $donation_item=array(
+        $beggar_item=array(
             "id" => $id,
-            "beggar_cnic" =>$beggar_cnic,
-            "beggar_full_name" =>$beggar_full_name,
-            "doner_name" => $doner_name,
-            "amount" => $amount
+            "full_name" => $full_name,
+            "cnic" =>$cnic,
+            "gender" => $gender,
+            "address" => $address,
+            "added_by" => $added_by,
+            "approved_by" => $approved_by
         );
   
-        array_push($donations_arr["records"], $donation_item);
+        array_push($beggars_arr["records"], $beggar_item);
     }
   
     // set response code - 200 OK
     http_response_code(200);
   
     // show donations data in json format
-    echo json_encode($donations_arr);
+    echo json_encode($beggars_arr);
 }
   
 else{
@@ -58,8 +60,8 @@ else{
     // set response code - 404 Not found
     http_response_code(404);
   
-    // tell the user no donation found
+    // tell the user no staff found
     echo json_encode(
-        array("message" => "No donation found.")
+        array("message" => "No beggar found.")
     );
 }

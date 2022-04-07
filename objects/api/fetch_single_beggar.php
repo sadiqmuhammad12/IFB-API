@@ -14,37 +14,39 @@ include_once '../objects/donation.php';
 $database = new Database();
 $db = $database->getConnection();
   
-// prepare donation object
-$donation = new Donation($db);
+// prepare beggar object
+$beggar = new Donation($db);
   
 // set ID property of record to read
-$donation->beggar_cnic = isset($_GET['beggar_cnic']) ? $_GET['beggar_cnic'] : die();
+$beggar->id = isset($_GET['id']) ? $_GET['id'] : die();
   
-// read the details of donation to be edited
-$donation->read_single_donation();
+// read the details of beggar to be edited
+$beggar->read_single_beggar();
   
-if($donation->doner_name!=null){
+if($beggar->full_name!=null){
     // create array
-    $donation_arr = array(
-        "id" =>  $donation->id,
-        "beggar_full_name" => $donation->beggar_full_name,
-        "doner_name" => $donation->doner_name,
-        "beggar_cnic" => $donation->beggar_cnic,
-        "amount" => $donation->amount
+    $beggar_arr = array(
+        "id" =>  $beggar->id,
+        "full_name" => $beggar->full_name,
+        "cnic" => $beggar->cnic,
+        "gender" => $beggar->gender,
+        "address" => $beggar->address,
+        "added_by" => $beggar->added_by,
+        "approved_by" => $beggar->approved_by
     );
   
     // set response code - 200 OK
     http_response_code(200);
   
     // make it json format
-    echo json_encode($donation_arr);
+    echo json_encode($beggar_arr);
 }
   
 else{
     // set response code - 404 Not found
     http_response_code(404);
   
-    // tell the user donation does not exist
-    echo json_encode(array("message" => "donation does not exist."));
+    // tell the user beggar does not exist
+    echo json_encode(array("message" => "Beggar does not exist."));
 }
 ?>

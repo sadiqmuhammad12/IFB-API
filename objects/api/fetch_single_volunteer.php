@@ -14,37 +14,38 @@ include_once '../objects/donation.php';
 $database = new Database();
 $db = $database->getConnection();
   
-// prepare donation object
-$donation = new Donation($db);
+// prepare volunteer object
+$volunteer = new Donation($db);
   
 // set ID property of record to read
-$donation->beggar_cnic = isset($_GET['beggar_cnic']) ? $_GET['beggar_cnic'] : die();
+$volunteer->cnic = isset($_GET['cnic']) ? $_GET['cnic'] : die();
   
-// read the details of donation to be edited
-$donation->read_single_donation();
+// read the details of volunteer to be edited
+$volunteer->read_single_volunteer();
   
-if($donation->doner_name!=null){
+if($volunteer->full_name!=null){
     // create array
-    $donation_arr = array(
-        "id" =>  $donation->id,
-        "beggar_full_name" => $donation->beggar_full_name,
-        "doner_name" => $donation->doner_name,
-        "beggar_cnic" => $donation->beggar_cnic,
-        "amount" => $donation->amount
+    $volunteer_arr = array(
+        "id" =>  $volunteer->id,
+        "full_name" => $volunteer->full_name,
+        "cnic" => $volunteer->cnic,
+        "gender" => $volunteer->gender,
+        "address" => $volunteer->address
+  
     );
   
     // set response code - 200 OK
     http_response_code(200);
   
     // make it json format
-    echo json_encode($donation_arr);
+    echo json_encode($volunteer_arr);
 }
   
 else{
     // set response code - 404 Not found
     http_response_code(404);
   
-    // tell the user donation does not exist
-    echo json_encode(array("message" => "donation does not exist."));
+    // tell the user volunteer does not exist
+    echo json_encode(array("message" => "Volunteer does not exist."));
 }
 ?>
