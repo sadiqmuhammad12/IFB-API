@@ -1,4 +1,5 @@
 <?php
+session_start();
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: access");
 header("Access-Control-Allow-Methods: POST");
@@ -54,15 +55,36 @@ else:
         try{
             
             $fetch_user_by_email = "SELECT * FROM `users` WHERE `email`=:email";
+            
             $query_stmt = $conn->prepare($fetch_user_by_email);
+            
             $query_stmt->bindValue(':email', $email,PDO::PARAM_STR);
+            
             $query_stmt->execute();
+            
+            
+            // For Read id
+            // $user = $query_stmt->fetch(PDO::FETCH_OBJ);
+            // if($query_stmt->rowCount())
+            // {
+            //     $_SESSION['id'] = $user->id;
+            //     echo $_SESSION['id'];
+            //     // header('./api/create_donation.php');
+            //     header('./objects/donation.php');
+            // }
+            // else{return false;}
 
             // IF THE USER IS FOUNDED BY EMAIL
             if($query_stmt->rowCount()):
                 $row = $query_stmt->fetch(PDO::FETCH_ASSOC);
+                // $user = $query_stmt->fetch(PDO::FETCH_OBJ);
+                    
                 $check_password = password_verify($password, $row['password']);
-
+                // $_SESSION['user_id'] = $row['id'];
+                $_SESSION['user_id'] = $row['id'];
+                echo "New User ID  is :  ". $_SESSION['user_id'];
+                // echo "Id is : " . $row['id'];
+                header('./objects/donation.php');
                 // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
                 // IF PASSWORD IS CORRECT THEN SEND THE LOGIN 
                 if($check_password):
@@ -72,21 +94,29 @@ else:
                         array("user_id"=> $row['id'])
                     );
                     $returnData = [
+                        'id' => $row['id'],
                         'success' => 1,
                         'message' => 'You have successfully logged in.',
                         'token' => $token
                     ];
-
+                     
                 // IF INVALID PASSWORD
                 else:
                     $returnData = msg(0,422,'Invalid Password!');
+                    
+                    
                 endif;
+                
+                
 
             // IF THE USER IS NOT FOUNDED BY EMAIL THEN SHOW THE FOLLOWING ERROR
             else:
                 $returnData = msg(0,422,'Invalid Email Address!');
             endif;
+            
+            
         }
+        
         catch(PDOException $e){
             $returnData = msg(0,500,$e->getMessage());
         }

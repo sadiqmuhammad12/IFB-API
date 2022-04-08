@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+// echo $_SESSION['user_id'];         
 class Donation{
   
     // database connection and table name
@@ -9,6 +12,7 @@ class Donation{
     private $table_name_beggar = "beggar";
     private $table_name_volunteer = "volunteer";
     private $table_name_contact_us = "contact_us";
+    
     
   
     // object properties
@@ -87,19 +91,20 @@ function read(){
 
 
 // create donation
+
 function create_donation(){
-     
+    
     // query to insert record
     $query = "INSERT INTO
                 " . $this->table_name . "
                 
             SET
-            
                 beggar_cnic=:beggar_cnic,amount=:amount, doner_name=:doner_name,
                 phone_no=:phone_no,gender=:gender,description=:description,
                 img=:img,beggar_full_name=:beggar_full_name,address=:address,doner_id=:doner_id
                 ";
-
+                
+                echo $_SESSION['user_id'];         
 
     // for testing
         // $query = "INSERT INTO donation(beggar_cnic,amount,doner_name,phone_no,gender,description,img,
