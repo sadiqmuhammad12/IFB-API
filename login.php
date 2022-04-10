@@ -80,11 +80,11 @@ else:
                 // $user = $query_stmt->fetch(PDO::FETCH_OBJ);
                     
                 $check_password = password_verify($password, $row['password']);
-                // $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_id'] = $row['id'];
-                echo "New User ID  is :  ". $_SESSION['user_id'];
+                // $_SESSION['user_id'] = $row['id'];
+                // echo "New User ID  is :  ". $_SESSION['user_id'];
                 // echo "Id is : " . $row['id'];
-                header('./objects/donation.php');
+                // header('./objects/donation.php');
                 // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
                 // IF PASSWORD IS CORRECT THEN SEND THE LOGIN 
                 if($check_password):
