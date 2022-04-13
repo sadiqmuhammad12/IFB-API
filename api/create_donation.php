@@ -1,4 +1,6 @@
 <?php
+
+      
 // required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -46,13 +48,13 @@ if(
     $donation->img = $data->img;
     $donation->beggar_full_name=$data->beggar_full_name;
     $donation->doner_id=$data->doner_id;
-
+    
     // create the donation
     if($donation->create_donation()){
   //
         // set response code - 201 created
         http_response_code(201);
-  
+         
         // tell the user
         echo json_encode(array("message" => "Donation was created."));
     }

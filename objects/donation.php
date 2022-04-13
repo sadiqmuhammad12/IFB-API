@@ -104,7 +104,7 @@ function create_donation(){
                 img=:img,beggar_full_name=:beggar_full_name,address=:address,doner_id=:doner_id
                 ";
                 
-                echo $_SESSION['user_id'];         
+                // echo $_SESSION['user_id'];         
 
     // for testing
         // $query = "INSERT INTO donation(beggar_cnic,amount,doner_name,phone_no,gender,description,img,
