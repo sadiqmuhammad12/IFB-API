@@ -6,13 +6,14 @@ class Donation{
   
     // database connection and table name
     private $conn;
+
     private $table_name = "donation";
     private $table_name_doner = "doner";
     private $table_name_staff = "staff";
     private $table_name_beggar = "beggar";
     private $table_name_volunteer = "volunteer";
     private $table_name_contact_us = "contact_us";
-    
+    private $table_name_users = "users";    
     
   
     // object properties
@@ -58,7 +59,7 @@ class Donation{
     // public $fullname;
     // public $cnic;
     // public $address;
-
+    public $username;
 
     // constructor with $db as database connection
     public function __construct($db){
@@ -805,7 +806,7 @@ function create_contact(){
     $query = "INSERT INTO
                 " . $this->table_name_contact_us . "
             SET
-                full_name=:full_name, email=:email,city=:city,address=:address, comments=:comments";
+                full_name=:full_name, email=:email,city=:city,comments=:comments";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -814,14 +815,12 @@ function create_contact(){
     $this->full_name=htmlspecialchars(strip_tags($this->full_name));
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->city=htmlspecialchars(strip_tags($this->city));
-    $this->address=htmlspecialchars(strip_tags($this->address));
     $this->comments=htmlspecialchars(strip_tags($this->comments));
   
     // bind values
     $stmt->bindParam(":full_name", $this->full_name);
     $stmt->bindParam(":email", $this->email);
     $stmt->bindParam(":city", $this->city);
-    $stmt->bindParam(":address", $this->address);
     $stmt->bindParam(":comments", $this->comments);
     
   
@@ -831,6 +830,33 @@ function create_contact(){
     }
     return false;   
 }
+
+// read donation
+function read_single_user(){  
+    // query to read single record
+    $query = "SELECT * FROM  " . $this->table_name_users . " 
+            WHERE id = ?
+            LIMIT 0,1";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare( $query );
+  
+    // bind id of product to be updated
+    $stmt->bindParam(1, $this->id);
+  
+    // execute query
+    $stmt->execute();
+  
+    // get retrieved row
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    // set values to object properties
+    $this->username = $row['username'];
+    $this->id = $row['id'];
+    $this->email = $row['email'];
+
+}
+
 
 }
 ?>
