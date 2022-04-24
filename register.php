@@ -17,7 +17,8 @@ function msg($success, $status, $message, $extra = [])
     return array_merge([
         'success' => $success,
         'status' => $status,
-        'message' => $message
+        'message' => $message,
+    
     ], $extra);
 }
 
@@ -77,9 +78,25 @@ else :
                 $insert_stmt->bindValue(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
 
                 $insert_stmt->execute();
+                
 
-                $returnData = msg(1, 201, 'You have successfully registered.');
-
+                // This code for email sending
+                $to = $email;
+                $subject = "For Verification";
+                $random_code = rand(10000,50000); // This is for code generation
+                $message = "This is Your Code ".$random_code; 
+                $headers = "From: sender\'s email";
+              
+                mail($to, $subject, $message, $headers); // Send our email
+                
+                
+                // $returnData = msg(1, 201, 'You have successfully registered.');
+                $returnData = [
+                    'code' => $random_code,
+                    'success' => 1,
+                    'status' => 201,
+                    'message' => 'You have successfully registered.'
+                ];
             endif;
         } catch (PDOException $e) {
             $returnData = msg(0, 500, $e->getMessage());
