@@ -30,7 +30,13 @@ if($donation->doner_name!=null){
         "beggar_full_name" => $donation->beggar_full_name,
         "doner_name" => $donation->doner_name,
         "beggar_cnic" => $donation->beggar_cnic,
-        "amount" => $donation->amount
+        "amount" => $donation->amount,
+        "doner_id" => $donation->doner_id,
+        "phone_no" =>$donation->phone_no,
+        "gender" =>$donation->gender,
+        "address" =>$donation->address,
+        "description" =>$donation->description,
+        "name" => $donation->name //For image
     );
   
     // set response code - 200 OK

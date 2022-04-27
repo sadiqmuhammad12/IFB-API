@@ -33,6 +33,7 @@ class Donation{
      
     // object properties
     public $id;
+    public $name; // For image
     public $beggar_cnic;
     public $doner_id;
     public $amount;
@@ -178,6 +179,7 @@ function read_single_donation(){
   
     // set values to object properties
     $this->id = $row['id'];
+    $this->doner_id = $row['doner_id'];
     $this->amount = $row['amount'];
     $this->doner_name = $row['doner_name'];
     $this->phone_no = $row['phone_no'];
@@ -185,7 +187,7 @@ function read_single_donation(){
     $this->address = $row['address'];
     $this->description = $row['description'];
     $this->beggar_full_name = $row['beggar_full_name'];
-    $this->img = $row['img'];
+    $this->name = $row['name'];
 }
 
 
