@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json");
 header("Acess-Control-Allow-Origin: *");
 header("Acess-Control-Allow-Methods: POST");
@@ -10,70 +9,68 @@ include '../config/database.php';
 $db_connection = new Database();
 $conn = $db_connection->getConnection();
 
-$data = json_decode(file_get_contents("php://input"), true); // collect input parameters and convert into readable format
-$qoute = $_POST['qoute'];	
+$data = json_decode(file_get_contents("php://input"), true);
+  $id = $data['id'];
+  $stmt_edit = $conn->prepare('SELECT  *FROM slogan WHERE id =:id');
+  $stmt_edit->execute(array(':id'=>$id));
+  $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
+  extract($edit_row);
+ 
 
-$imageName  =  $_FILES['sendimage']['name'];
-$tempPath  =  $_FILES['sendimage']['tmp_name'];
-$fileSize  =  $_FILES['sendimage']['size'];
-
-		
-if(empty($imageName) || empty($qoute))
-{
-	$errorMSG = json_encode(array("message" => "please select image or insert other attribute", "status" => false));	
-	echo $errorMSG;
-}
-
-else
-{
-	$upload_path = '../slogan_image/'; // set upload folder path 
-	
-	$fileExt = strtolower(pathinfo($imageName,PATHINFO_EXTENSION)); // get image extension
-		
-	// valid image extensions
-	$valid_extensions = array('jpeg', 'jpg', 'png', 'gif'); 
-					
-	// allow valid image file formats
-	if(in_array($fileExt, $valid_extensions))
-	{				
-		//check file not exist our upload folder path
-		if(!file_exists($upload_path . $imageName))
-		{
-			// check file size '5MB'
-			if($fileSize < 5000000){
-				move_uploaded_file($tempPath, $upload_path . $imageName); // move file from system temporary path to our upload folder path 
-			}
-			else{		
-				$errorMSG = json_encode(array("message" => "Sorry, your file is too large, please upload 5 MB size", "status" => false));	
-				echo $errorMSG;
-			}
-		}
-		else
-		{		
-			$errorMSG = json_encode(array("message" => "Sorry, file already exists check upload folder", "status" => false));	
-			echo $errorMSG;
-		}
-	}
-	else
-	{		
-		$errorMSG = json_encode(array("message" => "Sorry, only JPG, JPEG, PNG & GIF files are allowed", "status" => false));	
-		echo $errorMSG;		
-	}
-}
-		
-// if no error caused, continue ....
-if(!isset($errorMSG))
-{
-    //For testing
-	// $insert_query = "INSERT INTO `slogan`(`name`,`qoute`) VALUES(:name,:qoute)";
-    $update_query = "UPDATE slogan SET name =: name, qoute =:qoute WHERE id =:id ";
-                $insert_stmt = $conn->prepare($update_query);
-                // DATA BINDING
-                $insert_stmt->bindValue(':name', htmlspecialchars(strip_tags($imageName)), PDO::PARAM_STR);
-				$insert_stmt->bindValue(':qoute', htmlspecialchars(strip_tags($qoute)), PDO::PARAM_STR);
-                $insert_stmt->execute();
-			
-	echo json_encode(array("message" => "Data Uploaded Successfully", "status" => true));	
-}
+ 
+ 
+  $qoute = $_POST['qoute'];// user name   
+  $imgFile = $_FILES['user_image']['name'];
+  $tmp_dir = $_FILES['user_image']['tmp_name'];
+  $imgSize = $_FILES['user_image']['size'];
+     
+  if($imgFile)
+  {
+   $upload_dir = '../slogan_image/'; // upload directory 
+   $imgExt = strtolower(pathinfo($imgFile,PATHINFO_EXTENSION)); // get image extension
+   $valid_extensions = array('jpeg', 'jpg', 'png', 'gif'); // valid extensions
+   $name = rand(1000,1000000).".".$imgExt;
+   if(in_array($imgExt, $valid_extensions))
+   {   
+    if($imgSize < 5000000)
+    {
+     unlink($upload_dir.$edit_row['name']);
+     move_uploaded_file($tmp_dir,$upload_dir.$name);
+    }
+    else
+    {
+     $errMSG = "Sorry, your file is too large it should be less then 5MB";
+    }
+   }
+   else
+   {
+    $errMSG = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";  
+   } 
+  }
+  else
+  {
+   // if no image selected the old image remain as it is.
+   $name = $edit_row['name']; // old image from database
+  } 
+      
+  
+  // if no error occured, continue ....
+  if(!isset($errMSG))
+  {
+   $stmt = $conn->prepare('UPDATE slogan 
+              SET qoute=:qoute,  
+               name=:name 
+               WHERE id=:id');
+   $stmt->bindParam(':qoute',$qoute);
+   $stmt->bindParam(':name',$name);
+   $stmt->bindParam(':id',$id);
+    
+   if($stmt->execute()){
+	$errMSG = "Successfully Updated ...";
+   }
+   else{
+    $errMSG = "Sorry Data Could Not Updated !";
+   }
+  }    
 
 ?>
