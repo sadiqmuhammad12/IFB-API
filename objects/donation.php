@@ -14,6 +14,7 @@ class Donation{
     private $table_name_volunteer = "volunteer";
     private $table_name_contact_us = "contact_us";
     private $table_name_users = "users";    
+    private $table_name_slogan = "slogan";
     
   
     // object properties
@@ -61,6 +62,7 @@ class Donation{
     // public $cnic;
     // public $address;
     public $username;
+    public $qoute;
 
     // constructor with $db as database connection
     public function __construct($db){
@@ -190,6 +192,42 @@ function read_single_donation(){
     $this->name = $row['name'];
 }
 
+// Fetch single element by doner-id
+function read_single_donation_by_doner_id($doner_id){  
+    // query to read single record
+    $query = "SELECT * FROM  " . $this->table_name . " 
+            WHERE doner_id LIKE ? ";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare( $query );
+
+    // sanitize
+    $doner_id=htmlspecialchars(strip_tags($doner_id));
+    $doner_id = "%{$doner_id}%";
+  
+    // bind doner_id of donation to be updated
+    $stmt->bindParam(1, $doner_id);
+  
+    // execute query
+    $stmt->execute();
+    return $stmt;
+  
+    // // get retrieved row
+    // $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    // // set values to object properties
+    // $this->id = $row['id'];
+    // $this->doner_id = $row['doner_id'];
+    // $this->amount = $row['amount'];
+    // $this->doner_name = $row['doner_name'];
+    // $this->phone_no = $row['phone_no'];
+    // $this->gender = $row['gender'];
+    // $this->address = $row['address'];
+    // $this->description = $row['description'];
+    // $this->beggar_full_name = $row['beggar_full_name'];
+    // $this->beggar_cnic = $row['beggar_cnic'];
+    // $this->name = $row['name'];
+}
 
 
 // create doner
@@ -352,7 +390,7 @@ function delete_donation(){
     // prepare query
     $stmt = $this->conn->prepare($query);
   
-    // sanitize
+    // sanitize id
     $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind id of record to delete
@@ -365,6 +403,7 @@ function delete_donation(){
   
     return false;
 }
+
 
 
 // delete the Doner
@@ -857,6 +896,41 @@ function read_single_user(){
     $this->id = $row['id'];
     $this->email = $row['email'];
 
+}
+
+
+// read slogan
+function read_slogan(){  
+    $query = " SELECT * FROM slogan";
+    
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+    // execute query
+    $stmt->execute();
+    return $stmt;
+}
+
+// delete the slogan
+function delete_slogan(){
+  
+    // delete query
+    $query = "DELETE FROM " . $this->table_name_slogan . " WHERE id = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize id
+    $this->id=htmlspecialchars(strip_tags($this->id));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->id);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
 }
 
 
