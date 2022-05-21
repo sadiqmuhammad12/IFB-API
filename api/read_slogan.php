@@ -42,6 +42,7 @@ if($num>0){
         );
   
         array_push($slogans_arr["records"], $slogan_item);
+    
     }
   
     // set response code - 200 OK

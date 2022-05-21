@@ -36,7 +36,9 @@ if($donation->doner_name!=null){
         "gender" =>$donation->gender,
         "address" =>$donation->address,
         "description" =>$donation->description,
-        "name" => $donation->name //For image
+        "name" => $donation->name, //For image
+        "email" =>$donation->email,
+        "username"=>$donation->username
     );
   
     // set response code - 200 OK

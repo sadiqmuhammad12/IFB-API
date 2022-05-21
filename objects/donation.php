@@ -163,9 +163,18 @@ function create_donation(){
 // Fetch single element
 function read_single_donation(){  
     // query to read single record
-    $query = "SELECT * FROM  " . $this->table_name . " 
-            WHERE beggar_cnic = ?
-            LIMIT 0,1";
+    // $query = "SELECT * FROM  " . $this->table_name . " 
+    //         WHERE beggar_cnic = ?
+    //         LIMIT 0,1";
+    $query = " SELECT users.id,users.username,users.email,donation.phone_no,donation.gender,
+      donation.description, donation.beggar_full_name,donation.address,
+      
+      donation.beggar_cnic,donation.doner_id,donation.amount,donation.doner_name,
+      donation.name
+      FROM donation
+      INNER JOIN users
+      ON donation.doner_id = users.id
+      WHERE beggar_cnic =?";
   
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
@@ -190,6 +199,8 @@ function read_single_donation(){
     $this->description = $row['description'];
     $this->beggar_full_name = $row['beggar_full_name'];
     $this->name = $row['name'];
+    $this->email=$row['email'];
+    $this->username=$row['username'];
 }
 
 // Fetch single element by doner-id
