@@ -6,7 +6,7 @@ class Database{
     // private $db_name = "idfb";
     // private $username = "idfb_user";
     // private $password = "kJfVqML59kzc8nMS";
-
+    //This is fo testing
  
     private $host = "localhost";
     private $db_name = "fake_beggar";
