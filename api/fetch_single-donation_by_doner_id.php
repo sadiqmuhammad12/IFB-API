@@ -31,7 +31,7 @@ if($num > 0)
 {
      // products array
      $donation_arr=array();
-     $donation_arr["records"]=array();
+    //  $donation_arr["records"]=array();
      while($row = $stmt->fetch(PDO::FETCH_ASSOC))
      {
         extract($row);
@@ -49,7 +49,8 @@ if($num > 0)
         "description" =>$description,
         "name" => $name //For image
     );
-    array_push($donation_arr["records"], $donation_item);
+    // array_push($donation_arr["records"], $donation_item);
+    array_push($donation_arr, $donation_item);
  }
    // set response code - 200 OK
    http_response_code(200);
