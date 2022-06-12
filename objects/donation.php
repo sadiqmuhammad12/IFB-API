@@ -858,7 +858,7 @@ function create_contact(){
     $query = "INSERT INTO
                 " . $this->table_name_contact_us . "
             SET
-                full_name=:full_name, email=:email,city=:city,comments=:comments";
+                full_name=:full_name, email=:email,address=:address,comments=:comments";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -866,13 +866,13 @@ function create_contact(){
     // sanitize
     $this->full_name=htmlspecialchars(strip_tags($this->full_name));
     $this->email=htmlspecialchars(strip_tags($this->email));
-    $this->city=htmlspecialchars(strip_tags($this->city));
+    $this->address=htmlspecialchars(strip_tags($this->address));
     $this->comments=htmlspecialchars(strip_tags($this->comments));
   
     // bind values
     $stmt->bindParam(":full_name", $this->full_name);
     $stmt->bindParam(":email", $this->email);
-    $stmt->bindParam(":city", $this->city);
+    $stmt->bindParam(":address", $this->address);
     $stmt->bindParam(":comments", $this->comments);
     
   

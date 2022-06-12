@@ -24,7 +24,7 @@ $data = json_decode(file_get_contents("php://input"));
 if(
     !empty($data->full_name) &&
     !empty($data->email) &&
-    !empty($data->city) &&
+    !empty($data->address) &&
 
     !empty($data->comments)
 ){
@@ -32,7 +32,7 @@ if(
     // set contact property values
     $contact->full_name = $data->full_name;
     $contact->email = $data->email;
-    $contact->city = $data->city;
+    $contact->address = $data->address;
     $contact->comments = $data->comments;
   
     // create the contact
