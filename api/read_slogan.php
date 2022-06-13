@@ -24,7 +24,7 @@ if($num>0){
   
     // donation array
     $slogans_arr=array();
-    $slogans_arr["records"]=array();
+    // $slogans_arr["records"]=array();
   
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -41,7 +41,7 @@ if($num>0){
             "qoute" =>$qoute
         );
   
-        array_push($slogans_arr["records"], $slogan_item);
+        array_push($slogans_arr, $slogan_item);
     
     }
   
