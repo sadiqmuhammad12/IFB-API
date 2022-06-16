@@ -19,6 +19,7 @@ class Donation{
   
     // object properties
     public $city;
+    public $beggar_full_name;
     public $comments;
     
     // Properties of beggar table
@@ -43,7 +44,6 @@ class Donation{
     public $passwords;
     public $profile_img;
     public $addressess;
-    public $beggar_full_name;
     // Properties of staff_table
     //public $id;
     public $staff_name;
@@ -294,8 +294,7 @@ function update_donation(){
                 gender = :gender,
                 img = :img,
                 address = :address,
-                beggar_full_name = :beggar_full_name,
-                description = :description,
+                description = :description
             WHERE
                 id = :id";
   
@@ -310,7 +309,6 @@ function update_donation(){
     $this->address=htmlspecialchars(strip_tags($this->address));
     $this->description=htmlspecialchars(strip_tags($this->description));
     $this->img=htmlspecialchars(strip_tags($this->img));
-    $this->beggar_full_name=htmlspecialchars(strip_tags($this->beggar_full_name));
     $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind values
@@ -322,7 +320,6 @@ function update_donation(){
     $stmt->bindParam(":address", $this->address);
     $stmt->bindParam(":description", $this->description);
     $stmt->bindParam(":img", $this->img);
-    $stmt->bindParam(":beggar_full_name", $this->beggar_full_name);
     $stmt->bindParam(":id", $this->id);
   
     // execute the query
@@ -402,7 +399,7 @@ function delete_donation(){
     $stmt = $this->conn->prepare($query);
   
     // sanitize id
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    // $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind id of record to delete
     $stmt->bindParam(1, $this->id);

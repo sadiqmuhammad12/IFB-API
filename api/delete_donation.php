@@ -21,7 +21,9 @@ $donation = new Donation($db);
 $data = json_decode(file_get_contents("php://input"));
   
 // set donation id to be deleted
-$donation->id = $data->id;
+// $donation->id = $data->id;
+$donation->id = isset($_GET['id']) ? $_GET['id'] : die();
+
   
 // delete the donation
 if($donation->delete_donation()){
