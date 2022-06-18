@@ -1,50 +1,91 @@
 <?php
-// required headers
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: PUT");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-  
-// include database and object files
+
+if ($_SERVER['REQUEST_METHOD'] !== 'PUT') :
+    http_response_code(405);
+    echo json_encode([
+        'success' => 0,
+        'message' => 'Invalid Request Method. HTTP method should be PUT',
+    ]);
+    exit;
+endif;
+
 include_once '../config/database.php';
-include_once '../objects/donation.php';
-  
-// get database connection
 $database = new Database();
-$db = $database->getConnection();
-  
-// prepare donation object
-$donation = new Donation($db);
-  
-// get id of donation to be edited
-$data = json_decode(file_get_contents("php://input"));
-  
-// set ID property of donation to be edited
-$donation->id = $data->id;
-  
-// set donation property values
-$donation->beggar_cnic = $data->beggar_cnic;
-$donation->amount = $data->amount;
-$donation->beggar_full_name=$beggar_full_name;
-$donation->doner_name = $data->doner_name;
-// update the donation
-if($donation->update_donation()){
-  
-    // set response code - 200 ok
-    http_response_code(200);
-  
-    // tell the user
-    echo json_encode(array("message" => "Donation was updated."));
+$conn = $database->getConnection();
+
+// $database = json_decode(file_get_contents("php://input"));
+$database->id = isset($_GET['id']) ? $_GET['id'] : die();
+
+if (!isset($database->id)) {
+    echo json_encode(['success' => 0, 'message' => 'Please provide the  ID.']);
+    exit;
 }
-  
-// if unable to update the donation, tell the user
-else{
-  
-    // set response code - 503 service unavailable
-    http_response_code(503);
-  
-    // tell the user
-    echo json_encode(array("message" => "Unable to update donation."));
+
+try {
+
+    $fetch_post = "SELECT * FROM `donation` WHERE id=:id";
+    $fetch_stmt = $conn->prepare($fetch_post);
+    $fetch_stmt->bindParam(':id', $database->id, PDO::PARAM_INT);
+    $fetch_stmt->execute();
+
+    if ($fetch_stmt->rowCount() > 0) :
+
+        $row = $fetch_stmt->fetch(PDO::FETCH_ASSOC);
+        $doner_id = isset($database->doner_id) ? $database->doner_id : $row['doner_id'];
+        $beggar_cnic = isset($database->beggar_cnic) ? $database->beggar_cnic : $row['beggar_cnic'];
+        $amount = isset($database->amount) ? $database->amount : $row['amount'];
+        $doner_name = isset($database->doner_name) ? $database->doner_name : $row['doner_name'];
+        $phone_no = isset($database->phone_no) ? $database->phone_no : $row['phone_no'];
+        $gender = isset($database->gender) ? $database->gender : $row['gender'];
+        $address = isset($database->address) ? $database->address : $row['address'];
+        $description = isset($database->description) ? $database->description : $row['description'];
+
+        $update_query = "UPDATE `donation` SET doner_id = :doner_id, beggar_cnic = :beggar_cnic, amount = :amount,
+        doner_name = :doner_name, phone_no = :phone_no, gender = :gender, address = :address, description = :description
+        WHERE id = :id";
+
+        $update_stmt = $conn->prepare($update_query);
+
+        $update_stmt->bindValue(':doner_id', htmlspecialchars(strip_tags($doner_id)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':beggar_cnic', htmlspecialchars(strip_tags($beggar_cnic)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':amount', htmlspecialchars(strip_tags($amount)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':doner_name', htmlspecialchars(strip_tags($doner_name)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':phone_no', htmlspecialchars(strip_tags($phone_no)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':gender', htmlspecialchars(strip_tags($gender)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':address', htmlspecialchars(strip_tags($address)), PDO::PARAM_STR);
+        $update_stmt->bindValue(':description', htmlspecialchars(strip_tags($description)), PDO::PARAM_STR);
+        $update_stmt->bindParam(':id', $database->id, PDO::PARAM_INT);
+
+
+        if ($update_stmt->execute()) {
+
+            echo json_encode([
+                'success' => 1,
+                'message' => 'Donation updated successfully'
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => 0,
+            'message' => 'Donation Not updated. Something is going wrong.'
+        ]);
+        exit;
+
+    else :
+        echo json_encode(['success' => 0, 'message' => 'Invalid ID. No donations found by the ID.']);
+        exit;
+    endif;
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => 0,
+        'message' => $e->getMessage()
+    ]);
+    exit;
 }
-?>
