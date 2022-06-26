@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'PUT') :
 endif;
 
 include_once '../config/database.php';
-$database = new Database();
-$conn = $database->getConnection();
+$data = new Database();
+$conn = $data->getConnection();
 
-// $database = json_decode(file_get_contents("php://input"));
-$database->id = isset($_GET['id']) ? $_GET['id'] : die();
+$data = json_decode(file_get_contents("php://input"));
+// $data->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-if (!isset($database->id)) {
+if (!isset($data->id)) {
     echo json_encode(['success' => 0, 'message' => 'Please provide the  ID.']);
     exit;
 }
@@ -30,20 +30,20 @@ try {
 
     $fetch_post = "SELECT * FROM `donation` WHERE id=:id";
     $fetch_stmt = $conn->prepare($fetch_post);
-    $fetch_stmt->bindParam(':id', $database->id, PDO::PARAM_INT);
+    $fetch_stmt->bindParam(':id', $data->id, PDO::PARAM_INT);
     $fetch_stmt->execute();
 
     if ($fetch_stmt->rowCount() > 0) :
 
         $row = $fetch_stmt->fetch(PDO::FETCH_ASSOC);
-        $doner_id = isset($database->doner_id) ? $database->doner_id : $row['doner_id'];
-        $beggar_cnic = isset($database->beggar_cnic) ? $database->beggar_cnic : $row['beggar_cnic'];
-        $amount = isset($database->amount) ? $database->amount : $row['amount'];
-        $doner_name = isset($database->doner_name) ? $database->doner_name : $row['doner_name'];
-        $phone_no = isset($database->phone_no) ? $database->phone_no : $row['phone_no'];
-        $gender = isset($database->gender) ? $database->gender : $row['gender'];
-        $address = isset($database->address) ? $database->address : $row['address'];
-        $description = isset($database->description) ? $database->description : $row['description'];
+        $doner_id = isset($data->doner_id) ? $data->doner_id : $row['doner_id'];
+        $beggar_cnic = isset($data->beggar_cnic) ? $data->beggar_cnic : $row['beggar_cnic'];
+        $amount = isset($data->amount) ? $data->amount : $row['amount'];
+        $doner_name = isset($data->doner_name) ? $data->doner_name : $row['doner_name'];
+        $phone_no = isset($data->phone_no) ? $data->phone_no : $row['phone_no'];
+        $gender = isset($data->gender) ? $data->gender : $row['gender'];
+        $address = isset($data->address) ? $data->address : $row['address'];
+        $description = isset($data->description) ? $data->description : $row['description'];
 
         $update_query = "UPDATE `donation` SET doner_id = :doner_id, beggar_cnic = :beggar_cnic, amount = :amount,
         doner_name = :doner_name, phone_no = :phone_no, gender = :gender, address = :address, description = :description
@@ -59,7 +59,7 @@ try {
         $update_stmt->bindValue(':gender', htmlspecialchars(strip_tags($gender)), PDO::PARAM_STR);
         $update_stmt->bindValue(':address', htmlspecialchars(strip_tags($address)), PDO::PARAM_STR);
         $update_stmt->bindValue(':description', htmlspecialchars(strip_tags($description)), PDO::PARAM_STR);
-        $update_stmt->bindParam(':id', $database->id, PDO::PARAM_INT);
+        $update_stmt->bindParam(':id', $data->id, PDO::PARAM_INT);
 
 
         if ($update_stmt->execute()) {

@@ -24,7 +24,7 @@ if($num>0){
   
     // volunteer array
     $volunteers_arr=array();
-    $volunteers_arr["records"]=array();
+    // $volunteers_arr["records"]=array();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         
@@ -38,7 +38,7 @@ if($num>0){
             "address" => $address
         );
   
-        array_push($volunteers_arr["records"], $volunteer_item);
+        array_push($volunteers_arr, $volunteer_item);
     }
   
     // set response code - 200 OK
