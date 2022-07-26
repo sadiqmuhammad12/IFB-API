@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'PUT') :
     exit;
 endif;
 
-// include_once '../config/database.php';
 include_once './config/database.php';
 $data = new Database();
 $conn = $data->getConnection();
@@ -29,24 +28,25 @@ if (!isset($data->email)) {
 
 try {
 
-    $fetch_post = "SELECT * FROM `users` WHERE email=:email";
+    $fetch_post = "SELECT * FROM `users` WHERE `email`=:email";
     $fetch_stmt = $conn->prepare($fetch_post);
-    $fetch_stmt->bindParam(':email', $data->email, PDO::PARAM_INT);
+    $fetch_stmt->bindParam(':email', $data->email, PDO::PARAM_STR);
     $fetch_stmt->execute();
 
-    if ($fetch_stmt->rowCount() > 0) :
+    if ($fetch_stmt->rowCount()>0) :
 
         $row = $fetch_stmt->fetch(PDO::FETCH_ASSOC);
         $password = isset($data->password) ? $data->password : $row['password'];
-     
+        
 
-        $update_query = "UPDATE `users` SET password = :password
-        WHERE email = :email";
+        $update_query = "UPDATE `users` SET password =:password WHERE email = :email";
 
         $update_stmt = $conn->prepare($update_query);
 
+        
+        
         $update_stmt->bindValue(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
-        $update_stmt->bindParam(':email', $data->email, PDO::PARAM_INT);
+        $update_stmt->bindParam(':email', $data->email, PDO::PARAM_STR);
 
 
         if ($update_stmt->execute()) {
