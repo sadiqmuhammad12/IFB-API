@@ -15,6 +15,7 @@ class Donation{
     private $table_name_contact_us = "contact_us";
     private $table_name_users = "users";    
     private $table_name_slogan = "slogan";
+    private $table_name_user = "users";
     
   
     // object properties
@@ -656,6 +657,36 @@ function read_single_beggar(){
     $this->address = $row['address'];
     $this->added_by = $row['added_by'];
     $this->approved_by = $row['approved_by'];
+}
+
+
+// Fetch single element
+function read_single_users(){  
+    // query to read single record
+    $query = "SELECT * FROM  " . $this->table_name_user . " 
+            WHERE email = ?
+            LIMIT 0,1";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare( $query );
+  
+    // bind email of product to be updated
+    $stmt->bindParam(1, $this->email);
+  
+    // execute query
+    $stmt->execute();
+  
+    // get retrieved row
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    // set values to object properties
+    $this->id = $row['id'];
+
+    // $this->cnic = $row['cnic'];
+    // $this->gender = $row['gender'];
+    // $this->address = $row['address'];
+    // $this->added_by = $row['added_by'];
+    // $this->approved_by = $row['approved_by'];
 }
 
 // read beggar

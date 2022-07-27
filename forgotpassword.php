@@ -19,18 +19,18 @@ $data = new Database();
 $conn = $data->getConnection();
 
 $data = json_decode(file_get_contents("php://input"));
-// $data->id = isset($_GET['id']) ? $_GET['id'] : die();
+$data->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-if (!isset($data->email)) {
-    echo json_encode(['success' => 0, 'message' => 'Please provide the  email.']);
+
+if (!isset($data->id)) {
+    echo json_encode(['success' => 0, 'message' => 'Please provide the  id.']);
     exit;
 }
 
 try {
-
-    $fetch_post = "SELECT * FROM `users` WHERE `email`=:email";
+    $fetch_post = "SELECT * FROM `users` WHERE `id`=:id";
     $fetch_stmt = $conn->prepare($fetch_post);
-    $fetch_stmt->bindParam(':email', $data->email, PDO::PARAM_STR);
+    $fetch_stmt->bindParam(':id', $data->id, PDO::PARAM_INT);
     $fetch_stmt->execute();
 
     if ($fetch_stmt->rowCount()>0) :
@@ -39,14 +39,14 @@ try {
         $password = isset($data->password) ? $data->password : $row['password'];
         
 
-        $update_query = "UPDATE `users` SET password =:password WHERE email = :email";
+        $update_query = "UPDATE `users` SET password =:password WHERE id = :id";
 
         $update_stmt = $conn->prepare($update_query);
 
         
         
         $update_stmt->bindValue(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
-        $update_stmt->bindParam(':email', $data->email, PDO::PARAM_STR);
+        $update_stmt->bindParam(':id', $data->id, PDO::PARAM_INT);
 
 
         if ($update_stmt->execute()) {
@@ -65,7 +65,7 @@ try {
         exit;
 
     else :
-        echo json_encode(['success' => 0, 'message' => 'Invalid email. No users found by the email.']);
+        echo json_encode(['success' => 0, 'message' => 'Invalid id. No users found by the id.']);
         exit;
     endif;
 } catch (PDOException $e) {
