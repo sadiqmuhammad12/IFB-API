@@ -7,19 +7,7 @@ header("Acess-Control-Allow-Headers: Acess-Control-Allow-Headers,Content-Type,Ac
 
 
 // require 'vendor/autoload.php';
-use Aws\S3\S3Client;
 require '../vendor/autoload.php';
-use Aws\S3\Exception\S3Exception;
-// require '/path/to/aws-autoloader.php';
-// Instantiate an Amazon S3 client.
-$s3Client = new S3Client([
-'version' => '2006-03-01',
-'region'  => 'us-east-1',
-'credentials' => [
-'key'    => 'AKIA45U7DWFW6TBYLOUS',
-'secret' => '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'
-]
-]);
 // include 'dbconfig.php'; // include database connection file
 include '../config/database.php';
 $db_connection = new Database();
